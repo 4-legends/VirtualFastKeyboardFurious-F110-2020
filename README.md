@@ -3,10 +3,18 @@ Carla interfacing with F10 S2020 Class
 
 Instructions:
 
-1. Install Carla Server and Client side and install sudo apt-get ros-melodic-pointcloud-to-laserscan
-2. Copy src into your workspace or Catkin_make 
-3. Run SDL_VIDEODRIVER=offscreen ./CarlaUE4.sh -opengl   from your carla client side folder
-4. Run roslaunch carla_ros_bridge pointcloud_converter.launch
-5. Run roslaunch carla_ros_bridge carla_ros_bridge_with_example_ego_vehicle.launch
+Installation:
+
+1. Install Carla Server and Client side
+2. Install sudo apt-get ros-melodic-pointcloud-to-laserscan
+
+Execution:
+
+1. Copy src into your workspace
+2. Catkin_make
+3. cd into your carla client side folder
+4. Run SDL_VIDEODRIVER=offscreen ./CarlaUE4.sh -opengl
+For Wall Following
+5. Run roslaunch wall_following wall_following_sim.launch
 
 Carla Ros Bridge is built from source and is in the src so need to install it seprately.
