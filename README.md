@@ -14,7 +14,8 @@ Execution:
 2. Catkin_make
 3. cd into your carla client side folder
 4. Run SDL_VIDEODRIVER=offscreen ./CarlaUE4.sh -opengl
-For Wall Following
+
+For Wall Following\
 5. Run roslaunch wall_following wall_following_sim.launch
 
 Carla Ros Bridge is built from source and is in the src so need to install it seprately.
