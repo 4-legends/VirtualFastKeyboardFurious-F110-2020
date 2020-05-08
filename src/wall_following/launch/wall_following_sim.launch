@@ -3,7 +3,7 @@
   <!--<include file="$(find racecar_simulator)/launch/simulator.launch">
         <arg name="map" value="$(find racecar_simulator)/maps/levine.yaml"/>
   </include> -->
-
+  <include file="$(find carla_ros_bridge)/launch/carla_ros_bridge_with_example_ego_vehicle.launch"/>
   <!-- output="screen" allows us to see print statements-->
   <node pkg="wall_following" name="pid_error_node" type="pid_error.py" output="screen"/> 
   <node pkg="wall_following" name="control_node" type="control.py" output="screen"/>

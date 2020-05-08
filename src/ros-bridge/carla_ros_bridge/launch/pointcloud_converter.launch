@@ -2,8 +2,4 @@
 <launch>
   <remap from="cloud_in" to="/carla/ego_vehicle/lidar/lidar1/point_cloud"/>
    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan"/>
-
-
-
-
 </launch>

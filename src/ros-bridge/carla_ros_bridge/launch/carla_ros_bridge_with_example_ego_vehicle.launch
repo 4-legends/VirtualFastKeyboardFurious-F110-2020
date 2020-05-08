@@ -38,10 +38,11 @@
     <arg name="spawn_point" value="$(arg spawn_point)"/>
   </include>
 
-  <include file="$(find carla_manual_control)/launch/carla_manual_control.launch">
+  <!-- <include file="$(find carla_manual_control)/launch/carla_manual_control.launch">
     <arg name='role_name' value='$(arg role_name)'/>
-  </include>
-
+  </include> -->
+  <include file="$(find carla_ros_bridge)/launch/pointcloud_converter.launch"/>
+  <node pkg="carla_ros_bridge" type="carla_sim_connector.py" name="$(anon foo)"/>
   <node pkg="rviz" type="rviz" name="rviz" args="-d $(find carla_ros_bridge)/config/carla_default_rviz.cfg.rviz"/>
 
 </launch>
