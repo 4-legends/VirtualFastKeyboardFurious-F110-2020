@@ -5,6 +5,8 @@ Instructions:
 
 Installation:
 
+Carla Ros Bridge is built from source and is in the src so need to install it seprately.
+
 1. Install Carla Server and Client side
 2. Install sudo apt-get ros-melodic-pointcloud-to-laserscan
 
@@ -17,5 +19,3 @@ Execution:
 
 For Wall Following\
 5. Run roslaunch wall_following wall_following_sim.launch
-
-Carla Ros Bridge is built from source and is in the src so need to install it seprately.
