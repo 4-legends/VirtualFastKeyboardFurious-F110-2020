@@ -10,6 +10,8 @@ project(pure_pursuit)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
+  message_generation
+  nav_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -46,12 +48,13 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
+add_message_files(
+   FILES
+   error_pp.msg
 #   Message1.msg
 #   Message2.msg
-# )
-
+)
+generate_messages(DEPENDENCIES std_msgs nav_msgs)
 ## Generate services in the 'srv' folder
 # add_service_files(
 #   FILES
