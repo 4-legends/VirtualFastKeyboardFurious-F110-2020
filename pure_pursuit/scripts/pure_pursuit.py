@@ -20,7 +20,7 @@ global LOOKAHEAD_DISTANCE
 LOOKAHEAD_DISTANCE = 1.5 # meters
 
 global previous_goal
-previous_goal = None
+previous_goal = 0
 
 ANGLE_LEVEL_1 = 10.0
 SPEED_LEVEL_1 = 1
@@ -58,20 +58,28 @@ def dist(p1, p2):
 # Runs pure pursuit and publishes velocity and steering angle.
 
 
-def find_goal_point(x,y):
-    global LOOKAHEAD_DISTANCE
-    min_dist = 100000
-    status = False
+def find_goal_point(x,y, yaw, LOOKAHEAD_DISTANCE):
+
+    dist_arr= np.zeros(len(path_points))
+    global previous_goal
+    goal = previous_goal
+
     for i in range(len(path_points)):
-        wx,wy,wz = path_points[i] 
-        euclid_dist = dist((x, y), (wx,wy))
+        dist_arr[i] = dist((path_points[i][0],path_points[i][1]),(x,y))
 
-        if euclid_dist >= LOOKAHEAD_DISTANCE and euclid_dist<min_dist: #base case
-            min_dist = euclid_dist
-            closest_point = path_points[i] 
-            status = True
+    goal_arr = []
+    for i in range(dist_arr.shape[0]):
+        if dist_arr[i]>= LOOKAHEAD_DISTANCE- 0.3 and dist_arr[i] <= LOOKAHEAD_DISTANCE +0.3:
+            goal_arr.append(i)
 
-    return closest_point, status
+    for idx in goal_arr:
+        vector1 = [path_points[idx][0]-x , path_points[idx][1]-y]
+        vector2 = [np.cos(yaw), np.sin(yaw)]
+        if abs(find_angle(vector1, vector2)) < np.pi/2:
+            goal = idx
+            break
+
+    return goal
 
 def transform_point(goal_point):
     goal_pose_msg = PoseStamped()
@@ -92,6 +100,10 @@ def transform_point(goal_point):
 
     return goal_pose_msg, goal_pose
 
+def find_angle( vector1, vector2):
+    cos_comp = np.dot(vector1, vector2)
+    sin_comp = np.linalg.norm(np.cross(vector2, vector2))
+    return np.arctan2(sin_comp, cos_comp)
 
 def callback(msg):
 
@@ -107,19 +119,17 @@ def callback(msg):
     yaw = tf.transformations.euler_from_quaternion(pose_quaternion)[2]
 
     # 2. Find the path point closest to the vehicle that is >= 1 lookahead distance from vehicle's current location.
-    found = False
-    global previous_goal
-    goal_point = previous_goal
-    while( not found):
-        goal_point, status = find_goal_point(x,y)
-        if status:
-            found =True
+    global LOOKAHEAD_DISTANCE
+
+    goal = find_goal_point(x,y, yaw, LOOKAHEAD_DISTANCE)
+
+    goal_point = path_points[goal]
+    previous_goal = goal
 
 
-    # 3. Transform the goal point to vehicle coordinates. 
+    # # 3. Transform the goal point to vehicle coordinates. 
     goal_pose_msg, goal_pose = transform_point(goal_point)
 
-    global LOOKAHEAD_DISTANCE
     # 4. Calculate the curvature = 1/r = 2x/l^2
     # The curvature is transformed into steering wheel angle and published to the 'drive_param' topic.
     abs_y = abs(goal_pose.pose.position.y)
@@ -153,4 +163,5 @@ def callback(msg):
 if __name__ == '__main__':
     rospy.Subscriber('/odom', Odometry, callback, queue_size=1)
     rospy.spin()
+
 
