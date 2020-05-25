@@ -13,6 +13,8 @@ import tf
 from nav_msgs.msg import Path
 from geometry_msgs.msg import PoseStamped
 import copy
+from visualization_msgs.msg import Marker
+
 #############
 # CONSTANTS #
 #############
@@ -35,6 +37,7 @@ SPEED_LEVEL_3 = 0.5
 # Import waypoints.csv into a list (path_points)
 dirname = os.path.dirname(__file__)
 filename = os.path.join(dirname, '../waypoints/levine-waypoints.csv')
+
 with open(filename) as f:
     path_points = [tuple(line) for line in csv.reader(f)]
 
@@ -43,6 +46,9 @@ path_points = [(float(point[0]), float(point[1]), float(point[2])) for point in 
         
 # Publisher for 'drive_parameters' (speed and steering angle)
 pub = rospy.Publisher('drive_parameters', drive_param, queue_size=1)
+goal_pub = rospy.Publisher('desired_path', PoseStamped, queue_size=1)
+marker_pub = rospy.Publisher('lookahead',Marker, queue_size=1)
+
 rospy.init_node('pure_pursuit')
 tf_listener = tf.TransformListener() #use tf tree for pose transforms
 
@@ -155,13 +161,34 @@ def callback(msg):
         LOOKAHEAD_DISTANCE = 1.0
 
 
+
+
+
+
     msg = drive_param()
     msg.velocity = vel
     msg.angle = angle
     pub.publish(msg)
-    
+    goal_pub.publish(goal_pose_msg)
+
+
+    lookahead_marker = Marker()
+    lookahead_marker.type = Marker.TEXT_VIEW_FACING
+    lookahead_marker.header.frame_id = '/map'
+    lookahead_marker.scale.z = 0.5
+    lookahead_marker.color.a = 1
+    lookahead_marker.color.r = 1.0
+    lookahead_marker.color.g = 0.0
+    lookahead_marker.color.b = 0.0    
+    lookahead_marker.pose.position.x = 0.0
+    lookahead_marker.pose.position.y = 4.0
+
+    multiline_str = 'LOOKAHEAD_DISTANCE: %s'%str(LOOKAHEAD_DISTANCE) + ' \n' + 'VELOCITY: %s'%str(vel)
+
+    lookahead_marker.text =  multiline_str 
+    marker_pub.publish(lookahead_marker)
+
 if __name__ == '__main__':
     rospy.Subscriber('/odom', Odometry, callback, queue_size=1)
     rospy.spin()
-
 

@@ -8,7 +8,7 @@ from nav_msgs.msg import Odometry, Path
 from geometry_msgs.msg import PoseStamped
 from tf.transformations import euler_from_quaternion
 
-csv_file = open('../waypoints.csv', 'w')
+csv_file = open('../waypoints/waypoints.csv', 'w')
 
 pub = rospy.Publisher('/saved_waypoints', Path, queue_size=1)
 waypoints = Path()
