@@ -60,14 +60,14 @@ class Error_analysis:
 			self.max_error = error
 		max_error = self.max_error	
 		look = rospy.get_param('LOOKAHEAD_DISTANCE')
-		error_to_csv = (theta, max_error, error, look)
+		error_to_csv = (max_error, error)
 		self.error_list.append(error_to_csv)
 		self.error_pub.publish(error)
 		self.max_error_pub.publish(self.max_error)
 
 	def save_csv(self):
 		print("Saving waypoints...")
-		df = pd.DataFrame(self.error_list, columns=['theta', 'Max Error', 'Error', 'Lookahead'])
+		df = pd.DataFrame(self.error_list, columns=['Max Error', 'Error'])
 		df.to_csv('error.csv')
 
 if __name__ == '__main__':
