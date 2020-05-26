@@ -3,7 +3,6 @@
 import rospy
 import math
 from std_msgs.msg import Float64
-#from pure_pursuit.msg import error_pp
 import tf
 import numpy as np
 import pandas as pd 
@@ -19,8 +18,6 @@ class Error_analysis:
 		self.pf_yaw = 0
 		rospy.on_shutdown(self.save_csv)
 
-		self.error_pub = rospy.Publisher('/error', Float64, queue_size=1)
-		self.max_error_pub = rospy.Publisher('/max_error', Float64, queue_size=1)
 		self.pf_sub = rospy.Subscriber('/pf/pose/odom', Odometry, self.dg_callback)
 		self.dg_sub = rospy.Subscriber('/desired_path', PoseStamped, self.pf_callback)
 
@@ -52,9 +49,7 @@ class Error_analysis:
 		pose_quaternion = np.array([qx, qy, qz, qw])
 		yaw = tf.transformations.euler_from_quaternion(pose_quaternion)[2]
 		
-		#self.error = abs(self.pf - msg)
 		error = Float64()
-		theta = abs(self.pf_yaw - yaw)
 		error = math.sqrt((self.pf.pose.pose.position.x - x)**2 + (self.pf.pose.pose.position.y - y)**2)
 		if error > self.max_error:
 			self.max_error = error
@@ -62,8 +57,6 @@ class Error_analysis:
 		look = rospy.get_param('LOOKAHEAD_DISTANCE')
 		error_to_csv = (max_error, error)
 		self.error_list.append(error_to_csv)
-		self.error_pub.publish(error)
-		self.max_error_pub.publish(self.max_error)
 
 	def save_csv(self):
 		print("Saving waypoints...")
