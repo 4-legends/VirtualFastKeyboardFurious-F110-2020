@@ -36,7 +36,7 @@ SPEED_LEVEL_3 = 0.5
 
 # Import waypoints.csv into a list (path_points)
 dirname = os.path.dirname(__file__)
-filename = os.path.join(dirname, '../waypoints/levine-waypoints.csv')
+filename = os.path.join(dirname, '../waypoints/pure-pursuit-waypoints.csv')
 
 with open(filename) as f:
     path_points = [tuple(line) for line in csv.reader(f)]
@@ -139,8 +139,8 @@ def callback(msg):
     # 4. Calculate the curvature = 1/r = 2x/l^2
     # The curvature is transformed into steering wheel angle and published to the 'drive_param' topic.
     abs_y = abs(goal_pose.pose.position.y)
-    angle = ((2.0*abs_y)/(LOOKAHEAD_DISTANCE**2))
-
+    curvature = ((2.0*abs_y)/(LOOKAHEAD_DISTANCE**2))
+    angle = np.arctan(LOOKAHEAD_DISTANCE*curvature)
     if (goal_pose.pose.position.y < 0):
        angle = -angle #Right Steering
     else:
