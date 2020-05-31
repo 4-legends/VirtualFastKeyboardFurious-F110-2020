@@ -36,5 +36,5 @@ L_GAP_ANGLE_LIMITS : 10
 # Instruction Following Params
 INSTRUCTION_STATUS: 'INACTIVE'
 MAX_SPEED: 5
-INSTRUCTIONS_FILE: '/home/jay/common_catkin/catkin_ws2/src/virtualfastkeyboardfurious_wall_following/explicit_instructions/instructions.csv'
+#INSTRUCTIONS_FILE: '/home/jay/common_catkin/catkin_ws2/src/virtualfastkeyboardfurious_wall_following/explicit_instructions/instructions.csv'
 

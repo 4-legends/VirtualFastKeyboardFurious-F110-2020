@@ -9,7 +9,7 @@
   <node pkg="virtualfastkeyboardfurious_wall_following" name="visualize_gap_finding_node" type="visualize_gap_finding.py" /> 
 
   <rosparam command="load" file="$(find virtualfastkeyboardfurious_wall_following)/config/params.yaml"/>
-
+  <param name="INSTRUCTIONS_FILE" value="$(find virtualfastkeyboardfurious_wall_following)/explicit_instructions/instructions.csv "/>
   <node pkg="virtualfastkeyboardfurious_wall_following" name="pid_error_node" type="pid_error.py" output="screen"/>	
   <node pkg="virtualfastkeyboardfurious_wall_following" name="control_node" type="control.py"/>
   <node pkg="virtualfastkeyboardfurious_wall_following" name="error_analysis_node" type="analysis.py"/>
