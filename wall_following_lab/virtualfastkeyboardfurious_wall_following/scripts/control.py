@@ -45,7 +45,7 @@ def control_callback(msg):
         angle = 0.0
 
     degree_angle =  math.degrees(angle)
-    if  0.0 <= abs(degree_angle)  and abs() <= ANGLE_LEVEL_1:
+    if  0.0 <= abs(degree_angle)  and abs(degree_angle) <= ANGLE_LEVEL_1:
         vel = vel
     elif  ANGLE_LEVEL_1<= abs(degree_angle) and abs(degree_angle) <= ANGLE_LEVEL_2:
         vel = SPEED_LEVEL_2
