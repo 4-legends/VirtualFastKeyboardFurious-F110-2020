@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find racecar_simulator)/launch/simulator.launch">
+        <arg name="map" value="$(find racecar_simulator)/maps/levine.yaml"/>
+  </include>
+
+
+  <node pkg="virtualfastkeyboardfurious_wall_following" name="find_gap" type="find_gap.py" output="screen"/>
+  <node pkg="virtualfastkeyboardfurious_wall_following" name="visualize_gap_finding_node" type="visualize_gap_finding.py" /> 
+
+  <rosparam command="load" file="$(find virtualfastkeyboardfurious_wall_following)/config/params.yaml"/>
+
+
+  <node pkg="virtualfastkeyboardfurious_wall_following" name="sim_connector_node" type="sim_connector.py" output="screen"/>
+
+    <node pkg="rviz" type="rviz" name="rviz_pp" args="-d $(find virtualfastkeyboardfurious_wall_following)/rviz_cfg/wall_following_instructions.rviz"/>
+
+</launch>
