@@ -32,37 +32,14 @@ class Error_analysis:
 			self.current_pos.pose.pose.position.x = x
 		if y != self.pf.pose.pose.position.y:
 			self.current_pos.pose.pose.position.y = y
-			
-
-			
-
-		#self.pf.pose.pose.orientation.x = msg.pose.orientation.x
-		#self.pf.pose.pose.orientation.y = msg.pose.orientation.y
-		#self.pf.pose.pose.orientation.z = msg.pose.orientation.z
-		#self.pf.pose.pose.orientation.w = msg.pose.orientation.w
-		#qx = self.pf.pose.pose.orientation.x
-		#qy = self.pf.pose.pose.orientation.y
-		#qz = self.pf.pose.pose.orientation.z
-		#qw = self.pf.pose.pose.orientation.w		
-		#pose_quaternion = np.array([qx, qy, qz, qw])
-		#self.pf_yaw = tf.transformations.euler_from_quaternion(pose_quaternion)[2]
-		
 		
 	
 	def dg_callback(self, msg):
 		
 		x = msg.pose.pose.position.x
 		y = msg.pose.pose.position.y
-		 
-		#qx = msg.pose.pose.orientation.x
-		#qy = msg.pose.pose.orientation.y
-		#qz = msg.pose.pose.orientation.z
-		#qw = msg.pose.pose.orientation.w
-
-		#pose_quaternion = np.array([qx, qy, qz, qw])
-		#yaw = tf.transformations.euler_from_quaternion(pose_quaternion)[2]
 		
-		error = Float64()
+		error = 0 #Float64()
 		base = math.sqrt((self.current_pos.pose.pose.position.x - self.pf.pose.pose.position.x)**2 + (self.current_pos.pose.pose.position.y - self.pf.pose.pose.position.y)**2)
 		
 		a = self.current_pos.pose.pose.position.x - x
@@ -75,7 +52,7 @@ class Error_analysis:
 		if error > self.max_error:
 			self.max_error = error
 		max_error = self.max_error	
-		look = rospy.get_param('LOOKAHEAD_DISTANCE')
+		#look = rospy.get_param('LOOKAHEAD_DISTANCE')
 		error_to_csv = (max_error, error)
 		self.error_list.append(error_to_csv)
 		rospy.loginfo("Current_pos = (%f,%f) Next_Goal = (%f, %f) Car_Pos = (%f, %f) Error = %f", self.current_pos.pose.pose.position.x, self.current_pos.pose.pose.position.y, self.pf.pose.pose.position.x, self.pf.pose.pose.position.y, x, y, error)
