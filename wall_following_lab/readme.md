@@ -8,10 +8,11 @@
 
 
 ## Run after compiling workspace
-For Pure wall following
+## For Pure wall following
 ``  $ roslaunch virtualfastkeyboardfurious_wall_following pure_wall_following.launch 
 ``
-For Instruction Following
+
+###For Instruction Following
 ``  $ roslaunch virtualfastkeyboardfurious_wall_following instruction_wall_following.launch 
 ``
   press n after roslaunching.
