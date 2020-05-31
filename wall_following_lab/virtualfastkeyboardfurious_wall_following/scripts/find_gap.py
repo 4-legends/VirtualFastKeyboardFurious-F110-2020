@@ -18,11 +18,10 @@ gap_center_pub = rospy.Publisher("gap_center", Vector3, queue_size=5)
 gaps_pub = rospy.Publisher("lidar_gaps", gaps, queue_size=5)
 
 max_gap_distance = 10.0
-min_gap_distance = 0.5
+min_gap_distance = 1.0
 
 global prev_gap_msg_info
-prev_gap_msg_info = gaps()
-
+found = False
 def find_gaps(data):
 
     angle_increment = data.angle_increment # angle increment over scan steps
@@ -33,7 +32,7 @@ def find_gaps(data):
     data_arr[np.isnan(data_arr)] = 0.0
     #filter data
     data_arr[data_arr>max_gap_distance] = max_gap_distance
-    data_arr[data_arr<min_gap_distance] = min_gap_distance
+    data_arr[data_arr<min_gap_distance] =  1.0
 
     segment_storage = []
     scale_permissible_diff = 0.1
@@ -55,7 +54,7 @@ def find_gaps(data):
 
         #two sides of the gap 
         s1 = data_arr[segment_storage[i]] 
-        s2 = data_arr[segment_storage[i]]
+        s2 = data_arr[segment_storage[i+1]]
 
         gap_length = np.sqrt( s1**2 + s2**2 - 2*s2*s1*np.cos(scan_gap_angle))
         alpha =np.arccos(1/(2*s1*gap_length)*(s1**2 + gap_length*gap_length - s2**2))
@@ -84,28 +83,22 @@ def find_gaps(data):
 
         gap_msg_info.num_gaps +=1
 
-    # if gap_msg_info.num_gaps<1:
-    #     global prev_gap_msg_info
 
-    #     gap_msg_info = prev_gap_msg_info
+    global prev_gap_msg_info
 
-    #     best_gap_idx = np.argmax(gap_msg_info.gap_size)
-    #     best_gap_vector = gap_msg_info.gap_centers[best_gap_idx]   
-    # else:
-    best_gap_idx = np.argmax(gap_msg_info.gap_size)
-    best_gap_vector = gap_msg_info.gap_centers[best_gap_idx]   
-    return gap_msg_info, best_gap_vector
+    if gap_msg_info.num_gaps>0:
+        best_gap_idx = np.argmax(gap_msg_info.gap_size)
+        best_gap_vector = gap_msg_info.gap_centers[best_gap_idx] 
+        #publishing gap center and gap_info messages
+        gap_center_pub.publish(best_gap_vector)
+        gaps_pub.publish(gap_msg_info)
 
 # Callback that receives LIDAR data on the /scan topic.
 # data: the LIDAR data, published as sensor_msgs::LaserScan
 def scan_callback(data):
+   find_gaps(data)
 
-    gap_msg_info, best_gap_vector = find_gaps(data)
 
-
-    #publishing gap center and gap_info messages
-    gap_center_pub.publish(best_gap_vector)
-    gaps_pub.publish(gap_msg_info)
 
 # Boilerplate code to start this ROS node.
 if __name__ == '__main__':

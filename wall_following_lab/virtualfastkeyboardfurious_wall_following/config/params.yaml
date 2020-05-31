@@ -30,7 +30,7 @@ MIN_GAP_SIZE : 1.0
 MAX_GAP_SIZE : 10.0
 
 R_GAP_ANGLE_LIMITS : -20
-L_GAP_ANGLE_LIMITS : 20
+L_GAP_ANGLE_LIMITS : 10
 
 
 # Instruction Following Params

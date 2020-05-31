@@ -14,8 +14,8 @@ rospy.init_node('instructionFollowing', anonymous=True)
 tf_listener = tf.TransformListener()
 
 # SET GAP FINDING CONSTANTS
-TURN_COMPLETE_ANGLE = 50
-CENTER_COUNTER = 400
+TURN_COMPLETE_ANGLE = 60
+CENTER_COUNTER = 100
 R_GAP_ANGLE_LIMITS= rospy.get_param('R_GAP_ANGLE_LIMITS')
 L_GAP_ANGLE_LIMITS = rospy.get_param('L_GAP_ANGLE_LIMITS')
 MIN_GAP_SIZE= rospy.get_param('MIN_GAP_SIZE')
@@ -88,28 +88,29 @@ class instructionFollowing():
         gap_size_list = gap_msg.gap_size
         gap_at_left = False
         gap_at_right = False
-        gap_at_cneter = False
+        gap_at_center = True
         junction_type = 'NO_JUNCTION'
 
         for i in range(len(gap_size_list)):
-            cur_gap_size = gap_size_list[i]
-            cur_gap_angle = gap_angle_list[i]
+            cur_gap_size = gap_size_list[i].data
+            cur_gap_angle = gap_angle_list[i].data
             if MIN_GAP_SIZE <= cur_gap_size  and cur_gap_size <= MAX_GAP_SIZE:
                 if cur_gap_angle <= R_GAP_ANGLE_LIMITS:
                     gap_at_right = True
                 elif cur_gap_angle > R_GAP_ANGLE_LIMITS and cur_gap_angle < L_GAP_ANGLE_LIMITS:
-                    gap_at_cneter = True
+                    gap_at_center = True
                 elif cur_gap_angle >= L_GAP_ANGLE_LIMITS:
                     gap_at_left = True
 
-        if gap_at_left == True and gap_at_right == True and gap_at_cneter == True:
+        if gap_at_left == True and gap_at_right == True and gap_at_center == True:
             junction_type = 'CROSS'
         elif gap_at_left == True and gap_at_right == True: # T Junction Case
             junction_type = 'T'
-        elif gap_at_left == True and gap_at_cneter == True:  # T Junction Case
+        elif gap_at_left == True and gap_at_center == True:  # T Junction Case
             junction_type = 'T'
-        elif gap_at_cneter == True and gap_at_right == True: # T Junction Case
+        elif gap_at_right == True  and gap_at_center == True  : # T Junction Case
             junction_type = 'T'
+
         return junction_type
 
     def handle_junction(self, junction_type):
