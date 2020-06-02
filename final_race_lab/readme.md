@@ -1,10 +1,9 @@
 ## Instructions
 
-1. Check the params.yaml to change the wall following mode, currently its default DIRECTION: 'center'
-2. To set KP, KD again check params.yaml
-3. To change default velocity, max velocity check params.yaml.
-4. Demo videos are provided in Videos/
-5. Make sure you have the f110-skeletons-spring2020 race simulator also compiled in the catkin_ws
+1. Check the params.yaml to change ros params.
+2. Demo videos are provided in Videos/
+3. Report about algorithms and parameter descriptiosn are provided in Report/
+4. Make sure you have the f110-skeletons-spring2020 race simulator also compiled in the catkin_ws
 
 
 ## Run after compiling workspace
@@ -13,7 +12,7 @@
 ``
 
 * For final race 
-``  $ roslaunch virtualfastkeyboardfurious_final_race instruction_wall_following.launch 
+``  $ roslaunch virtualfastkeyboardfurious_final_race final_race_launch.launch 
 ``
   press n after roslaunching.
 
