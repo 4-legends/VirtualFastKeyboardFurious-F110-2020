@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <launch>
   <include file="$(find carla_ros_bridge)/launch/carla_ros_bridge_with_example_ego_vehicle.launch"/>
- <!-- <node pkg="carla_lane_finding" name="lane_image" type="lane_image.py" output="screen"/> -->
+  <node pkg="carla_lane_finding" name="lane_centering" type="lane_centering.py" output="screen"/>
 </launch>
