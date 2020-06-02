@@ -132,6 +132,7 @@ def callback(msg):
     goal_point = path_points[goal]
     previous_goal = goal
 
+
     # # 3. Transform the goal point to vehicle coordinates. 
     goal_pose_msg, goal_pose = transform_point(goal_point)
 
@@ -145,6 +146,7 @@ def callback(msg):
     else:
         angle = angle #Left Steering
 
+    
     angle = np.clip(angle, -0.4189, 0.4189) # 0.4189 radians = 24 degrees because car can only turn 24 degrees max
     # clipping  speeds and Lookahead
     degree_angle =  math.degrees(angle)
@@ -158,11 +160,17 @@ def callback(msg):
         vel =  SPEED_LEVEL_3
         LOOKAHEAD_DISTANCE = 1.0
 
+
+
+
+
+
     msg = drive_param()
     msg.velocity = vel
     msg.angle = angle
     pub.publish(msg)
     goal_pub.publish(goal_pose_msg)
+
 
     lookahead_marker = Marker()
     lookahead_marker.type = Marker.TEXT_VIEW_FACING
@@ -181,6 +189,6 @@ def callback(msg):
     marker_pub.publish(lookahead_marker)
 
 if __name__ == '__main__':
-    rospy.Subscriber('/odom', Odometry, callback, queue_size=1)
+    rospy.Subscriber('/pf/pose/odom', Odometry, callback, queue_size=1)
     rospy.spin()
 
