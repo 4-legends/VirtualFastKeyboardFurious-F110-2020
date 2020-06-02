@@ -85,9 +85,6 @@ def followRight(data, desired_distance):
 def followCenter(data, DESIRED_DISTANCE):
     a = getRange(data, THETA)
     b = getRange(data, 0)
-    theta = np.deg2rad(THETA)
-    tan_alpha = (a*math.cos(theta) - b)/(a*math.sin(theta))
-    alpha = math.atan(tan_alpha)
 
     Dt_projected = compute_projectedDistance(a,b, 'center')
 
