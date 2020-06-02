@@ -28,10 +28,10 @@ for i in range(len(max_abs_error)):
 
 Total_abs_error_last = 0
 for i in range(len(error_abs)):
-    Total_abs_error_last += error_abs[i]
+    Total_abs_error_last += abs(error_abs[i])
     total_abs_error.append(Total_abs_error_last)
 
-
+print(Total_abs_error_last)
 plt.figure('Max Error')
 plt.plot(plot_max_abs_error, label="max_abs_error", c='red')
 plt.ylabel('Error (m)')
