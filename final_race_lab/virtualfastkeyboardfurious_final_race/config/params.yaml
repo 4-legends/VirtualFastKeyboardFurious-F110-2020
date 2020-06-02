@@ -1,0 +1,39 @@
+
+# PID Params
+KP : 0.5
+KD : 0.01
+
+
+# Adaptive Steering Params
+ANGLE_LEVEL_1 : 10.0
+SPEED_LEVEL_1 : 1.5
+ANGLE_LEVEL_2 : 20.0
+SPEED_LEVEL_2 : 1.0
+SPEED_LEVEL_3 : 0.5
+
+# Wall Following Params
+MIN_DISTANCE : 0.1
+MAX_DISTANCE : 30.0
+MIN_ANGLE : -45.0
+MAX_ANGLE : 225.0
+LOOKAHEAD_DISTANCE : 1.5
+DESIRED_DISTANCE : 0.8
+THETA : 40
+
+
+# Wall following mode
+DIRECTION: 'center'
+VELOCITY: 1.0
+
+#Gap Finding Params
+MIN_GAP_SIZE : 1.0
+MAX_GAP_SIZE : 10.0
+
+R_GAP_ANGLE_LIMITS : -20
+L_GAP_ANGLE_LIMITS : 10
+
+
+# Instruction Following Params
+INSTRUCTION_STATUS: 'INACTIVE'
+MAX_SPEED: 5
+

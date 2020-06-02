@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find racecar_simulator)/launch/simulator.launch">
+        <arg name="map" value="$(find race_monitor)/maps/race_track_f110.yaml"/>
+  </include>
+
+  <rosparam command="load" file="$(find virtualfastkeyboardfurious_final_race)/config/params.yaml"/>
+
+ <node pkg="virtualfastkeyboardfurious_final_race" name="pid_error_node" type="pid_error.py" output="screen"/>	
+  <node pkg="virtualfastkeyboardfurious_final_race" name="control_node" type="control.py" output="screen"/>
+  <node pkg="virtualfastkeyboardfurious_final_race" name="error_analysis_node" type="analysis.py"/>
+
+  <node pkg="virtualfastkeyboardfurious_final_race" name="sim_connector_node" type="sim_connector.py" output="screen"/>
+
+</launch>
