@@ -6,7 +6,7 @@
   
   <include file="$(find race_monitor)/launch/race_monitor.launch"/> 
 
-  <node pkg="virtualfastkeyboardfurious_final_race" name="pure_pursuit_node" type="pure_pursuit.py" output="screen"/>
+  <node pkg="virtualfastkeyboardfurious_final_race" name="final_race_node" type="final_race.py" output="screen"/>
   <node pkg="virtualfastkeyboardfurious_final_race" name="sim_connector_node" type="sim_connector.py" output="screen"/>
 
     <node pkg="virtualfastkeyboardfurious_final_race" name="visualize_markers_node" type="visualize_markers.py" output="screen"/>

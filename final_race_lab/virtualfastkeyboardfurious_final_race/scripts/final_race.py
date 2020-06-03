@@ -184,6 +184,6 @@ def callback(msg):
     marker_pub.publish(lookahead_marker)
 
 if __name__ == '__main__':
-    rospy.Subscriber('/odom', Odometry, callback, queue_size=1)
+    rospy.Subscriber('/pf/pose/odom', Odometry, callback, queue_size=1)
     rospy.spin()
 
