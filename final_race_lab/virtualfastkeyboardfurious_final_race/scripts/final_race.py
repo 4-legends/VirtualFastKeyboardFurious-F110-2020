@@ -148,19 +148,26 @@ def callback(msg):
     else:
         angle = angle #Left Steering
 
-    angle = np.clip(angle, -0.4189, 0.4189) # 0.4189 radians = 24 degrees because car can only turn 24 degrees max
+    angle = np.clip(angle, -0.201799, 0.201799) # 0.4189 radians = 24 degrees because car can only turn 24 degrees max 0.349066 = 20 deg 0.261799 = 15 deg
     # clipping  speeds and Lookahead
-    degree_angle =  math.degrees(angle)
-    if abs(degree_angle) < ANGLE_LEVEL_1:
+    degree_angle =  abs(math.degrees(angle))
+    if degree_angle < ANGLE_LEVEL_1:
         vel =  SPEED_LEVEL_1
         LOOKAHEAD_DISTANCE = 1.5
-    elif  ANGLE_LEVEL_1<= abs(degree_angle) and abs(degree_angle) < ANGLE_LEVEL_2:
+    elif  ANGLE_LEVEL_1<= degree_angle and degree_angle < ANGLE_LEVEL_2:
         vel =  SPEED_LEVEL_2
         LOOKAHEAD_DISTANCE = 1.0
     else:
         vel =  SPEED_LEVEL_3
         LOOKAHEAD_DISTANCE = 0.5
-
+    LOOKAHEAD_DISTANCE = 3 - 1.5/40*degree_angle
+    if degree_angle > 10:
+        a = 10
+    else:
+        a = degree_angle
+    vel = (2-7)/20*a +7
+    if vel < 2:
+        vel = 2
     msg = drive_param()
     msg.velocity = vel
     msg.angle = angle
