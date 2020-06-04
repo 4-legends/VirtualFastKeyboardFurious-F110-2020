@@ -149,7 +149,7 @@ def callback(msg):
         angle = angle #Left Steering
 
     angle = np.clip(angle, -0.201799, 0.201799) # 0.4189 radians = 24 degrees because car can only turn 24 degrees max 0.349066 = 20 deg 0.261799 = 15 deg
-    # clipping  speeds and Lookahead
+    # clipping  speeds and Lookahead 0.201799 ~ 11 deg
     degree_angle =  abs(math.degrees(angle))
     if degree_angle < ANGLE_LEVEL_1:
         vel =  SPEED_LEVEL_1
@@ -168,6 +168,7 @@ def callback(msg):
     vel = (2-7)/20*a +7
     if vel < 2:
         vel = 2
+
     msg = drive_param()
     msg.velocity = vel
     msg.angle = angle
