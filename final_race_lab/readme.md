@@ -15,7 +15,10 @@
 * For final race 
 ``  $ roslaunch virtualfastkeyboardfurious_final_race final_race_launch.launch 
 ``
-  press n after roslaunching.
+
+* For Error Tracking 
+``  $ rosrun virtualfastkeyboardfurious_final_race error_analysis.py 
+``
 
 
   ![alt text](./images/mapPlanner.png)
