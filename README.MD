@@ -8,6 +8,8 @@
 2. Carla F110 integration with automatic lane centering task.
 3. SLAM Lab with particle filter localization and cartographer mapping
 4. Pure Pursuit Implementation
+5. Final Race Lab
+
 
 
 ## License
