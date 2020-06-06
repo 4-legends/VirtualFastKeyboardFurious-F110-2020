@@ -1,14 +1,6 @@
-"""
-
-Path planning Sample Code with Randomized Rapidly-Exploring Random Trees (RRT)
-
-author: AtsushiSakai(@Atsushi_twi)
-
-"""
-
 import math
 import random
-
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -16,15 +8,8 @@ show_animation = True
 
 
 class RRT:
-    """
-    Class for RRT planning
-    """
 
     class Node:
-        """
-        RRT Node
-        """
-
         def __init__(self, x, y):
             self.x = x
             self.y = y
@@ -34,15 +19,6 @@ class RRT:
 
     def __init__(self, start, goal, obstacle_list, rand_area,
                  expand_dis=3.0, path_resolution=0.5, goal_sample_rate=5, max_iter=500):
-        """
-        Setting Parameter
-
-        start:Start Position [x,y]
-        goal:Goal Position [x,y]
-        obstacleList:obstacle Positions [[x,y,size],...]
-        randArea:Random Sampling Area [min,max]
-
-        """
         self.start = self.Node(start[0], start[1])
         self.end = self.Node(goal[0], goal[1])
         self.min_rand = rand_area[0]
@@ -73,15 +49,14 @@ class RRT:
                 self.node_list.append(new_node)
 
             if animation and i % 5 == 0:
-                self.draw_graph(rnd_node)
-
+                self.draw_graph(i , rnd_node)
             if self.calc_dist_to_goal(self.node_list[-1].x, self.node_list[-1].y) <= self.expand_dis:
                 final_node = self.steer(self.node_list[-1], self.end, self.expand_dis)
                 if self.check_collision(final_node, self.obstacle_list):
                     return self.generate_final_course(len(self.node_list) - 1)
 
             if animation and i % 5:
-                self.draw_graph(rnd_node)
+                self.draw_graph(i , rnd_node)
 
         return None  # cannot find path
 
@@ -96,14 +71,15 @@ class RRT:
         if extend_length > d:
             extend_length = d
 
-        n_expand = math.floor(extend_length / self.path_resolution)
-
+        n_expand = int(math.floor(extend_length / self.path_resolution))
         for _ in range(n_expand):
             new_node.x += self.path_resolution * math.cos(theta)
             new_node.y += self.path_resolution * math.sin(theta)
             new_node.path_x.append(new_node.x)
             new_node.path_y.append(new_node.y)
 
+
+    
         d, _ = self.calc_distance_and_angle(new_node, to_node)
         if d <= self.path_resolution:
             new_node.path_x.append(to_node.x)
@@ -112,6 +88,8 @@ class RRT:
         new_node.parent = from_node
 
         return new_node
+
+    
 
     def generate_final_course(self, goal_ind):
         path = [[self.end.x, self.end.y]]
@@ -136,13 +114,13 @@ class RRT:
             rnd = self.Node(self.end.x, self.end.y)
         return rnd
 
-    def draw_graph(self, rnd=None):
+    def draw_graph(self, idx, rnd=None):
         plt.clf()
         # for stopping simulation with the esc key.
         plt.gcf().canvas.mpl_connect('key_release_event',
                                      lambda event: [exit(0) if event.key == 'escape' else None])
         if rnd is not None:
-            plt.plot(rnd.x, rnd.y, "^k")
+            plt.plot(rnd.x, rnd.y, "ok")
         for node in self.node_list:
             if node.parent:
                 plt.plot(node.path_x, node.path_y, "-g")
@@ -155,8 +133,9 @@ class RRT:
         plt.axis("equal")
         plt.axis([-2, 15, -2, 15])
         plt.grid(True)
+        plt.savefig('../imgs/toy_rr_%02d.png'%idx)
+        
         plt.pause(0.01)
-
     @staticmethod
     def plot_circle(x, y, size, color="-b"):  # pragma: no cover
         deg = list(range(0, 360, 5))
@@ -197,40 +176,59 @@ class RRT:
         theta = math.atan2(dy, dx)
         return d, theta
 
+gx=6.0
+gy=10.0
 
-def main(gx=6.0, gy=10.0):
-    print("start " + __file__)
+# ====Search Path with RRT====
+obstacleList = [
+    (5, 5, 1),
+    (3, 6, 2),
+    (3, 8, 2),
+    (3, 10, 2),
+    (7, 5, 2),
+    (9, 5, 2),
+    (8, 10, 1)
+]  # [x, y, radius]
+# Set Initial parameters
+rrt = RRT(start=[0, 0],
+          goal=[gx, gy],
+          rand_area=[-2, 15],
+          obstacle_list=obstacleList)
+animation=True
 
-    # ====Search Path with RRT====
-    obstacleList = [
-        (5, 5, 1),
-        (3, 6, 2),
-        (3, 8, 2),
-        (3, 10, 2),
-        (7, 5, 2),
-        (9, 5, 2),
-        (8, 10, 1)
-    ]  # [x, y, radius]
-    # Set Initial parameters
-    rrt = RRT(start=[0, 0],
-              goal=[gx, gy],
-              rand_area=[-2, 15],
-              obstacle_list=obstacleList)
-    path = rrt.planning(animation=show_animation)
+final_path  = []
+rrt.node_list = [rrt.start]
+found = False
 
-    if path is None:
-        print("Cannot find path")
-    else:
-        print("found path!!")
+for i in range(500):
+    rnd_node = rrt.get_random_node()
+    nearest_ind = rrt.get_nearest_node_index(rrt.node_list, rnd_node)
+    nearest_node = rrt.node_list[nearest_ind]
 
-        # Draw final path
-        if show_animation:
-            rrt.draw_graph()
-            plt.plot([x for (x, y) in path], [y for (x, y) in path], '-r')
-            plt.grid(True)
-            plt.pause(0.01)  # Need for Mac
-            plt.show()
+    new_node = rrt.steer(nearest_node, rnd_node, rrt.expand_dis)
+
+    if rrt.check_collision(new_node, rrt.obstacle_list):
+        rrt.node_list.append(new_node)
+    if animation and i % 5 == 0:
+        rrt.draw_graph(i, rnd_node)
+    if rrt.calc_dist_to_goal(rrt.node_list[-1].x, rrt.node_list[-1].y) <= rrt.expand_dis:
+        final_node = rrt.steer(rrt.node_list[-1], rrt.end, rrt.expand_dis)
+        if rrt.check_collision(final_node, rrt.obstacle_list):
+            final_path =  rrt.generate_final_course(len(rrt.node_list) - 1)
+            found = True
+    if animation and i % 5:
+        rrt.draw_graph(i, rnd_node)
+    if found:
+        print ('Saved figs in ../imgs/')
+        print ('Succesfully Found Path')
+        break
 
 
-if __name__ == '__main__':
-    main()
+if found:
+    plt.plot([x for (x, y) in final_path], [y for (x, y) in final_path], '-r')
+    plt.axis("equal")
+    plt.axis([-2, 15, -2, 15])
+    plt.grid(True)
+    plt.savefig('../imgs/toy_rr_%02d.png'%(i+1))    
+    plt.pause(0.01)  
+    plt.show() 

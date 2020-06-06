@@ -21,4 +21,8 @@
 ``
 
 
-  ![alt text](./images/mapPlanner.png)
+* For generating RRT based waypoints go virtualfastkeyboardfurious_final_race/scripts/
+``  $ python rrt_race.py
+``
+
+  ![alt text](./images/Wall_Following_waypnt.png)
